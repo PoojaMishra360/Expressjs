@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 const app = express();
 const port = 3900;
 
@@ -20,6 +19,7 @@ function middleware(req, res, next) {
  
 }
 
+// this is glaobal middleware that will run for all routes and all requests
 app.use(middleware);
 
 
@@ -30,6 +30,7 @@ const publicDir = path.resolve(__dirname, 'public');
 const viewsDir = path.resolve(__dirname, 'views');
 
 app.use(express.static(publicDir));
+
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(viewsDir, 'home.html'));
