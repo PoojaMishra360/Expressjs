@@ -1,6 +1,6 @@
 import express from 'express';
 const app = express();
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); // Set EJS as the view engine
 
 app.get('/', (req, res) => {
   res.render('home', { title: 'Home Page', message: 'Welcome to the Home Page!' ,age: req.query.age });
