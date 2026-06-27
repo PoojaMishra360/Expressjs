@@ -1,9 +1,8 @@
 import express from 'express';
 import path from 'path';
 const app = express();
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true })); // inbuilt middleware to parse urlencoded data
+app.use(express.static('public')); // inbuilt middleware to serve static files from the public directory
 app.get('/' ,(req, res) => {
   res.sendFile(path.resolve('views/home.html'));
 });
