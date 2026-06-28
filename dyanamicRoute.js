@@ -21,8 +21,10 @@ app.get('/users/:id', (req, res) => {
 
 app.get('/users/:name', (req, res) => {
   const userName = req.params.name;
-  const user = userJson.find(u => u.name === userName);
+  console.log(userName);
+  const user = userJson.find(u => u.name.toLocaleLowerCase() === userName.toLocaleLowerCase());
   if (!user) {
+    console.log(userName);
     return res.status(404).json({ error: 'User not found' });
   }
   res.json(user);
