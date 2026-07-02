@@ -25,7 +25,6 @@ client.connect().then(() => {
   const collection = db.collection('student');
   app.get('/ui', async (req, res) => {
     const students = await collection.find({}).toArray();
-    console.log(students);
     res.render('student', { students });
   });
   app.get('/api', async (req, res) => {
@@ -80,6 +79,19 @@ app.delete('/api/:id', async (req, res) => {
       res.status(404).send(`<h1>Student not found</h1><a href="/ui">Go back to student list</a>`);
     }
   
+  });
+
+  app.get('/ui/student/:id', async (req, res) => {
+    const student = await collection.findOne({ _id: new ObjectId(req.params.id) });
+    console.log(student);
+    res.render('UpdateForm', { student });
+  });
+
+  app.post('/student-update/:id', async (req, res) => {
+    const student = req.body;
+    const result = await collection.updateOne({ _id: new ObjectId(req.params.id) }, { $set: student });
+    console.log(result);
+    res.send(result);
   });
 }).catch(err => {
   console.error('Error connecting to MongoDB:', err);
