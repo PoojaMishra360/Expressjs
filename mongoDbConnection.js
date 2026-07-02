@@ -1,5 +1,5 @@
 import express from 'express';
-import { MongoClient } from 'mongodb';
+import { MongoClient ,ObjectId} from 'mongodb';
 const app = express();
 const PORT = 4000;
  const uri = 'mongodb://localhost:27017';
@@ -18,6 +18,7 @@ const PORT = 4000;
 //   res.render('student', { students });
 // });
 
+app.use(express.urlencoded({ extended: true }));
 client.connect().then(() => {
   console.log('Connected to MongoDB');
   const db = client.db(dbName);
@@ -38,9 +39,51 @@ client.connect().then(() => {
     res.send(students);
   });
 
+  app.get('/add', (req, res) => {
+    res.render('studentForm');
+  });
 
+  app.post('/student-insert', async (req, res) => {
+    const student = req.body;
+    const result = await collection.insertOne(student);
+    console.log(result);
+    res.send(result);
+});
+
+// this calling the delete api to delete the student from the database using the id of the student
+// for thunder testing
+app.delete('/api/:id', async (req, res) => {
+    const result = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
+    console.log(result);
+    if(result) {
+  res.send({ message: 'Student deleted successfully' ,
+    sucess : true,
+    result : result
+  });
+    } else {
+      res.status(404).send({ message: 'Student not found' ,
+      sucess : false,
+      result : result
+    });
+    }
+  
+  });
+
+  //this is calling from UI page to delete the student from the database
+  // for UI testing
+  app.get('/ui/api/:id', async (req, res) => {
+    const result = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
+    console.log(result);
+    if(result) {
+  res.send(`<h1>Student deleted successfully</h1><a href="/ui">Go back to student list</a>`);
+    } else {
+      res.status(404).send(`<h1>Student not found</h1><a href="/ui">Go back to student list</a>`);
+    }
+  
+  });
 }).catch(err => {
   console.error('Error connecting to MongoDB:', err);
+
 });
 
 app.listen(PORT, () => {
